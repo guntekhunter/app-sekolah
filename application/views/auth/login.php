@@ -14,6 +14,8 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Selamat datang</h1>
                                 </div>
+
+                                <?= $this->session->flashdata('message'); ?>
                                 <form class="user">
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukkan nama...">
