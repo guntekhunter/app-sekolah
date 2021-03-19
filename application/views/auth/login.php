@@ -28,7 +28,7 @@
                                     <div class="form-group">
 
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    <button type="submit" class="btn btn-info btn-user btn-block">
                                         Login
                                     </button>
 
