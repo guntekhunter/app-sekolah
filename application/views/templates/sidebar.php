@@ -11,58 +11,62 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider">
+    <!-- query dan join data dari tabel user menu dan user access menu -->
+    <?php
+    $role_id = $this->session->userdata('role_id');
+    $queryMenu = "SELECT user_menu.id, menu
+                FROM user_menu 
+                JOIN  user_access_menu 
+                ON user_menu.id = user_access_menu.menu_id 
+                WHERE user_access_menu.role_id = $role_id
+                ORDER BY user_access_menu.menu_id ASC";
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Guru
-    </div>
+    $menu = $this->db->query($queryMenu)->result_array();
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Profile</span></a>
-    </li>
+    ?>
 
+    <!-- looping menu -->
+    <?php foreach ($menu as $m) : ?>
+        <div class="sidebar-heading">
+            <?= $m['menu']; ?>
+        </div>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
+        <!-- sub menu sesuai menu yang telah disiapkan -->
+        <?php
+        $menuId = $m['id'];
+        $querySubMenu = "SELECT *
+        FROM user_sub_menu 
+        JOIN  user_menu 
+        ON user_sub_menu.menu_id = user_menu.id 
+        WHERE user_sub_menu.menu_id = $menuId
+        AND user_sub_menu.is_active = 1";
+        $subMenu = $this->db->query($querySubMenu)->result_array();
 
+        ?>
+        <?php foreach ($subMenu as $sm) : ?>
+            <?php if ($title == $sm['title']) : ?>
+                <li class="nav-item active">
+                <?php else : ?>
+                <li class="nav-item">
+                <?php endif; ?>
+                <a class="nav-link" href="<?= base_url($sm['url']); ?>">
+                    <i class="<?= $sm['icon']; ?>"></i>
+                    <span><?= $sm['title']; ?></span></a>
+                </li>
+            <?php endforeach; ?>
+            <hr class="sidebar-divider">
+        <?php endforeach; ?>
 
+        <li class="nav-item">
+            <a class="nav-link" href="<?= base_url('auth/logout') ?>">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                <span>Logout</span></a>
+        </li>
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Siswa
-    </div>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>siswa</span></a>
-    </li>
-    <hr class="sidebar-divider">
-    <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('auth/logout') ?>">
-            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>Logout</span></a>
-    </li>
-
-
-
-
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
-
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
 
 </ul>
 <!-- End of Sidebar -->
